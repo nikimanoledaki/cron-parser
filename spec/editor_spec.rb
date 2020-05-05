@@ -2,7 +2,7 @@ require 'editor.rb'
 
 describe Editor do
     describe '#put' do
-        it 'returns formatted cron job with one line' do
+        it 'returns formatted cron job with specific time' do
             time = "16:01"
             config = "30 1 /bin/run_me_daily\n"
             subject.get(config, time)
@@ -12,17 +12,25 @@ describe Editor do
 
         it 'returns cron job repeated every hour and minute' do
             time = "16:01"
-            config = "* * /bin/run_me_daily\n"
+            config = "* * /bin/run_me_every_minute\n"
             subject.get(config, time)
-            result = "16:01 today - /bin/run_me_daily\n"
+            result = "16:01 today - /bin/run_me_every_minute\n"
             expect{subject.put}.to output(result).to_stdout
         end
 
-        it 'returns cron job repeated every hour' do
-            time = "16:01"
-            config = "45 * /bin/run_me_daily\n"
+        it 'returns cron job repeated every hour at specific minute' do
+            time = "16:46"
+            config = "45 * /bin/run_me_hourly\n"
             subject.get(config, time)
-            result = "16:45 today - /bin/run_me_daily\n"
+            result = "17:45 today - /bin/run_me_hourly\n"
+            expect{subject.put}.to output(result).to_stdout
+        end
+
+        it 'returns cron job repeated every minute of every specific hour' do
+            time = "16:01"
+            config = "* 19 /bin/run_me_sixty_times\n"
+            subject.get(config, time)
+            result = "19:00 today - /bin/run_me_sixty_times\n"
             expect{subject.put}.to output(result).to_stdout
         end
 
