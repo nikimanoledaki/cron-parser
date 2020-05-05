@@ -10,13 +10,21 @@ describe Editor do
             expect{subject.put}.to output(result).to_stdout
         end
 
-        # it 'returns formatted list' do
-        #     time = "16:01"
-        #     config = "* * /bin/run_me_daily\n"
-        #     subject.get(config, time)
-        #     result = "16:01 today - /bin/run_me_daily\n"
-        #     expect{subject.put}.to output(result).to_stdout
-        # end
+        it 'returns cron job repeated every hour and minute' do
+            time = "16:01"
+            config = "* * /bin/run_me_daily\n"
+            subject.get(config, time)
+            result = "16:01 today - /bin/run_me_daily\n"
+            expect{subject.put}.to output(result).to_stdout
+        end
+
+        it 'returns cron job repeated every hour' do
+            time = "16:01"
+            config = "45 * /bin/run_me_daily\n"
+            subject.get(config, time)
+            result = "16:45 today - /bin/run_me_daily\n"
+            expect{subject.put}.to output(result).to_stdout
+        end
 
         # it 'returns formatted list of cron jobs' do
         #     time = "16:01"
