@@ -1,12 +1,24 @@
 class Editor
-    attr_reader :config_min, :config_hour, :command, :current_time
+    attr_reader :config_min, :config_hour, :command, :current_time, :formatted_config
 
     def get(config, current_time)
-        fields = config.split(' ')
+        @current_time = current_time
+        @formatted_config = []
+        config.each do |line|
+            get_line_details(line)
+            formatted_config << return_line
+        end
+    end
+
+    def put
+        puts @formatted_config.join("\n")
+    end
+
+    def get_line_details(line)
+        fields = line.split(' ')
         @config_min = fields[0]
         @config_hour = fields[1]
         @command = fields[2]
-        @current_time = current_time
     end
 
     def time?
@@ -33,11 +45,11 @@ class Editor
         current_min <= config_min ? "#{current_hour.to_i}:#{config_min}" : "#{current_hour.to_i + 1}:#{config_min}"
     end
 
-    def put
+    def return_line
         cron_time = time?
         today = Time.new(current_time) <= Time.new(cron_time)
         cron_day = today == true ? "today" : "tomorrow"
-        puts "#{cron_time} #{cron_day} - #{command}"
+        return "#{cron_time} #{cron_day} - #{command}"
     end
 
 end
